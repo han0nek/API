@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<body>
+
+<h1>Notes API</h1>
+
+<input id="id" placeholder="ID">
+<input id="name" placeholder="Nazwa">
+<input id="text" placeholder="Tresc">
+
+<br><br>
+
+<button onclick="send('GET')">GET</button>
+<button onclick="send('POST')">POST</button>
+<button onclick="send('PUT')">PUT</button>
+<button onclick="send('PATCH')">PATCH</button>
+<button onclick="send('DELETE')">DELETE</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function send(method) {
+
+    let id = document.getElementById("id").value;
+
+    let url = "api.php";
+
+    if (id)
+        url += "?id=" + id;
+
+    let data = {
+        notename: document.getElementById("name").value,
+        notetext: document.getElementById("text").value
+    };
+
+    let options = {
+        method: method
+    };
+
+    if (method == "POST" || method == "PUT" || method == "PATCH") {
+
+        options.headers = {
+            "Content-Type": "application/json"
+        };
+
+        options.body = JSON.stringify(data);
+    }
+
+    let response = await fetch(url, options);
+
+    let result = await response.json();
+
+    document.getElementById("result").textContent =
+        method + " " + url +
+        "\n\nJSON:\n" +
+        JSON.stringify(data, null, 2) +
+        "\n\nWYNIK:\n" +
+        JSON.stringify(result, null, 2);
+}
+
+</script>
+
+</body>
+</html>
